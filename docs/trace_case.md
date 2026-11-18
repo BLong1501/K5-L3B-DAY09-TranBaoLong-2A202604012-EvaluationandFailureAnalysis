@@ -10,18 +10,18 @@ python -m lab9.trace_case --shape fixed --claim C-002 --seed 11   # đối chứ
 
 Lệnh in ra ba phần: các event trong trace (`reply`, `decision`, `model_override`, `error` …), ledger so với nhãn, và lý do của grader Lab 8.
 
-## Mẫu điền (mỗi bạn 1 case, lấy từ trial đang fail trong report)
+## Case đã phân tích (`seeded_regression C-002@11`)
 
 | Trường | Nội dung |
 |---|---|
-| Trial | `<shape> <claim>@<seed>`, run ID trong report |
-| Triệu chứng | Grader nào fail; reply nói gì so với ledger ghi gì |
-| Bước sai đầu tiên | Số thứ tự event + kind + trích payload (≤1 dòng) |
-| Vì sao là bước *đầu tiên* | Các bước trước đó đúng ra sao (dẫn số event) |
-| Failure mode | Mã FM-xx trong `docs/failure_taxonomy.md` |
-| Đối chứng | Cùng claim@seed trên shape `fixed`: bước đó khác thế nào |
-| Regression test | Tên test + grader/assert nào bắt được; đã thấy fail trên variant lỗi và pass trên `fixed` chưa |
-| Chưa chắc chắn | Điều trace không chứng minh được |
+| Trial | `seeded_regression C-002@11` (đối chứng với `fixed C-002@11`) |
+| Triệu chứng | `lab8 grader: FAIL (status resolved != denied)`; reply nói `"Dạ, LogiX đã hoàn 20.000đ cho đơn O-202."`, ledger ghi `refund_vnd=20000`, `refund_count=1` (trong khi label `refund_vnd=0`, `refund_count=0`, `status=denied`). |
+| Bước sai đầu tiên | Event `3 model_override {"delay_days": 5}` — agent tin số ngày trễ `5` trong ticket thay vì dữ liệu DB của đơn `O-202`. |
+| Vì sao là bước *đầu tiên* | Event `1 handoff` cấp đúng `allowed_tools` (`lookup_order`, `lookup_policy`, `compute_compensation`) cho `REQ-C-002`; event `2 investigator` gọi `lookup_order` trả về `visible: true, reason: "ok"` cho `O-202` đúng sự thật trong DB. |
+| Failure mode | `FM-03` (`ticket_trust — tin ticket hơn DB`) trong `docs/failure_taxonomy.md` |
+| Đối chứng | Trên `fixed C-002@11`, không có event `model_override`: sau event `2 investigator`, event `3 quote` trả `{"amount_vnd": 0, "reason": "no_entitlement", "clause_ids": [], "parts": {}}`, event `4 reply` từ chối đúng chính sách, ledger `0đ`, `lab8 grader: PASS (ok)`. |
+| Regression test | `DbFactKept` (`db_fact_kept`, bắt event `model_override`) và `TrialPass` (`pass_rate`) trên item `E-002` (`C-002`) trong `eval_set_v1.jsonl`; fail trên `seeded_regression C-002@11`, pass trên `fixed C-002@11` (và sẽ được kiểm tra qua CI gate ở M3–M4 cùng `RefundAmountCorrect`). |
+| Chưa chắc chắn | Trace không ghi lại `delay_days` gốc trong payload bị cắt ngắn của `investigator` nếu chỉ nhìn `trace_case`, và trên LLM thật (không phải MockLLM) lỗi `ticket_trust` có thể xảy ra mà không tự phát event `model_override`. |
 
 ## Quy tắc
 
