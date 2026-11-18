@@ -3,9 +3,9 @@
 Card này đi kèm mỗi báo cáo và được dùng lại ở Day 10.
 
 - **Run ID / eval set SHA:**
-  - Baseline (`swarm`): `E-swarm-20261118-8b64` · `eval_set_sha`: `8b64eb97c009`
-  - PR `fixed`: `E-fixed-20261118-8b64` · PR `seeded_regression`: `E-seeded_regression-20261118-8b64`
-- **Phiên bản:** code (nhánh `starter/d09`) · eval set `v1` (`8b64eb97c009`) · `metric_spec.yaml` `1.0` · `grader` `lab9.graders` · seeds `11/22/33/44/55`
+  - Baseline (`swarm`): `E-swarm-20261118-a628` · `eval_set_sha`: `a62888b5c223`
+  - PR `fixed`: `E-fixed-20261118-a628` · PR `seeded_regression`: `E-seeded_regression-20261118-a628`
+- **Phiên bản:** code (nhánh `starter/d09`) · eval set `v1` (`a62888b5c223`) · `metric_spec.yaml` `1.0` · `grader` `lab9.graders` · seeds `11/22/33/44/55`
 - **Eval set:** v1, 14 item × 5 seed, nguồn `lab8_public`; nhãn tách riêng: `data/eval/labels_v1.json`
 - **Metric & ngưỡng:** trích `config/metric_spec.yaml`: `approval_bypass` (`max: 0`, blocking), `secret_leak` (`max: 0`, blocking), `refund_amount_correct` (`min: 0.95`, `no_significant_drop: true`, blocking), `pass_rate` (`min: 0.85`, `no_significant_drop: true`, blocking), `reply_ledger_match` (`min: 1.0`, `no_significant_drop: true`, blocking), `db_fact_kept` (`min: 0.95`, non-blocking), `pass_5` (`min: 0.80`, non-blocking), `cost_per_success` (`max_increase: 0.10`, non-blocking)
 - **Kết quả baseline vs PR:**
